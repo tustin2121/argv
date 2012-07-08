@@ -1,0 +1,222 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>argv by codenothing</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">argv</h1>
+        <p class="header">Node based command line argument parser</p>
+
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/codenothing/argv/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/codenothing/argv/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/codenothing/argv">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/codenothing">codenothing</a></p>
+
+
+      </header>
+      <section>
+        <h1>argv</h1>
+
+<p>argv is a nodejs module that does command line argument parsing.</p>
+
+<h3>Installation</h3>
+
+<div class="highlight">
+<pre><span class="nv">$ </span>npm install argv
+</pre>
+</div>
+
+
+<h3>Usage</h3>
+
+<div class="highlight">
+<pre><span class="kd">var</span> <span class="nx">argv</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span> <span class="s1">'argv'</span> <span class="p">);</span>
+<span class="kd">var</span> <span class="nx">args</span> <span class="o">=</span> <span class="nx">argv</span><span class="p">.</span><span class="nx">option</span><span class="p">(</span> <span class="nx">options</span> <span class="p">).</span><span class="nx">run</span><span class="p">();</span>
+<span class="o">-&gt;</span> <span class="p">{</span> <span class="nx">targets</span><span class="o">:</span> <span class="p">[],</span> <span class="nx">options</span><span class="o">:</span> <span class="p">{}</span> <span class="p">}</span>
+</pre>
+</div>
+
+
+<h3>Run</h3>
+
+<p>Runs the argument parser on the global arguments. Custom arguments array can be used by passing into this method</p>
+
+<div class="highlight">
+<pre><span class="c1">// Parses default arguments 'process.argv.slice( 2 )'</span>
+<span class="nx">argv</span><span class="p">.</span><span class="nx">run</span><span class="p">();</span>
+
+<span class="c1">// Parses array instead</span>
+<span class="nx">argv</span><span class="p">.</span><span class="nx">run</span><span class="p">([</span> <span class="s1">'--option=123'</span><span class="p">,</span> <span class="s1">'-o'</span><span class="p">,</span> <span class="s1">'123'</span> <span class="p">]);</span>
+</pre>
+</div>
+
+
+<h3>Options</h3>
+
+<p>argv is a strict argument parser, which means all options must be defined before parsing starts.</p>
+
+<div class="highlight">
+<pre><span class="nx">argv</span><span class="p">.</span><span class="nx">option</span><span class="p">({</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s1">'option'</span><span class="p">,</span>
+    <span class="kr">short</span><span class="o">:</span> <span class="s1">'o'</span><span class="p">,</span>
+    <span class="nx">type</span><span class="o">:</span> <span class="s1">'string'</span><span class="p">,</span>
+    <span class="nx">description</span><span class="o">:</span> <span class="s1">'Defines an option for your script'</span><span class="p">,</span>
+    <span class="nx">example</span><span class="o">:</span> <span class="s2">"'script --opiton=value' or 'script -o value'"</span>
+<span class="p">});</span>
+</pre>
+</div>
+
+
+<h3>Modules</h3>
+
+<p>Modules are nested commands for more complicated scripts. Each module has it's own set of options that
+have to be defined independently of the root options.</p>
+
+<div class="highlight">
+<pre><span class="nx">argv</span><span class="p">.</span><span class="nx">mod</span><span class="p">({</span>
+    <span class="nx">mod</span><span class="o">:</span> <span class="s1">'module'</span><span class="p">,</span>
+    <span class="nx">description</span><span class="o">:</span> <span class="s1">'Description of what the module is used for'</span><span class="p">,</span>
+    <span class="nx">options</span><span class="o">:</span> <span class="p">[</span> <span class="nx">list</span> <span class="nx">of</span> <span class="nx">options</span> <span class="p">]</span>
+<span class="p">});</span>
+</pre>
+</div>
+
+
+<h3>Types</h3>
+
+<p>Types convert option values to useful js objects. They are defined along with each option.</p>
+
+<ul>
+<li>
+<strong>string</strong>: Ensure values are strings</li>
+<li>
+<strong>path</strong>: Converts value into a fully resolved path.</li>
+<li>
+<strong>int</strong>: Converts value into an integer</li>
+<li>
+<strong>float</strong>: Converts value into a float number</li>
+<li>
+<strong>boolean</strong>: Converts value into a boolean object. 'true' and '1' are converted to true, everything else is false.</li>
+<li>
+<strong>csv</strong>: Converts value into an array by splitting on comma's.</li>
+<li>
+<strong>list</strong>: Allows for option to be defined multiple times, and each value added to an array</li>
+<li>
+<strong>[list|csv],[type]</strong>: Combo type that allows you to create a list or csv and convert each individual value into a type.</li>
+</ul><div class="highlight">
+<pre><span class="nx">argv</span><span class="p">.</span><span class="nx">option</span><span class="p">([</span>
+    <span class="p">{</span>
+        <span class="nx">name</span><span class="o">:</span> <span class="s1">'option'</span><span class="p">,</span>
+        <span class="nx">type</span><span class="o">:</span> <span class="s1">'csv,int'</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="nx">name</span><span class="o">:</span> <span class="s1">'path'</span><span class="p">,</span>
+        <span class="kr">short</span><span class="o">:</span> <span class="s1">'p'</span><span class="p">,</span>
+        <span class="nx">type</span><span class="o">:</span> <span class="s1">'list,path'</span>
+    <span class="p">}</span>
+<span class="p">]);</span>
+
+<span class="c1">// csv and int combo</span>
+<span class="nx">$</span> <span class="nx">script</span> <span class="o">--</span><span class="nx">option</span><span class="o">=</span><span class="mi">123</span><span class="p">,</span><span class="mf">456.001</span><span class="p">,</span><span class="mf">789.01</span>
+<span class="o">-&gt;</span> <span class="nx">option</span><span class="o">:</span> <span class="p">[</span> <span class="mi">123</span><span class="p">,</span> <span class="mi">456</span><span class="p">,</span> <span class="mi">789</span> <span class="p">]</span>
+
+<span class="c1">// list and path combo</span>
+<span class="nx">$</span> <span class="nx">script</span> <span class="o">-</span><span class="nx">p</span> <span class="o">/</span><span class="nx">path</span><span class="o">/</span><span class="nx">to</span><span class="o">/</span><span class="nx">file1</span> <span class="o">-</span><span class="nx">p</span> <span class="o">/</span><span class="nx">path</span><span class="o">/</span><span class="nx">to</span><span class="o">/</span><span class="nx">file2</span>
+<span class="o">-&gt;</span> <span class="nx">option</span><span class="o">:</span> <span class="p">[</span> <span class="s1">'/path/to/file1'</span><span class="p">,</span> <span class="s1">'/path/to/file2'</span> <span class="p">]</span>
+</pre>
+</div>
+
+
+<p>You can also create your own custom type for special conversions.</p>
+
+<div class="highlight">
+<pre><span class="nx">argv</span><span class="p">.</span><span class="nx">type</span><span class="p">(</span> <span class="s1">'squared'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="nx">value</span> <span class="o">=</span> <span class="nb">parseFloat</span><span class="p">(</span> <span class="nx">value</span> <span class="p">);</span>
+    <span class="k">return</span> <span class="nx">value</span> <span class="o">*</span> <span class="nx">value</span><span class="p">;</span>
+<span class="p">});</span>
+
+<span class="nx">argv</span><span class="p">.</span><span class="nx">option</span><span class="p">({</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s1">'square'</span><span class="p">,</span>
+    <span class="kr">short</span><span class="o">:</span> <span class="s1">'s'</span><span class="p">,</span>
+    <span class="nx">type</span><span class="o">:</span> <span class="s1">'squared'</span>
+<span class="p">});</span>
+
+<span class="nx">$</span> <span class="nx">script</span> <span class="o">-</span><span class="nx">s</span> <span class="mi">2</span>
+<span class="o">-&gt;</span> <span class="mi">4</span>
+</pre>
+</div>
+
+
+<h3>Version</h3>
+
+<p>Defining the scripts version number will add the version option and print it out when asked.</p>
+
+<div class="highlight">
+<pre><span class="nx">argv</span><span class="p">.</span><span class="nx">version</span><span class="p">(</span> <span class="s1">'v1.0'</span> <span class="p">);</span>
+
+<span class="nx">$</span> <span class="nx">script</span> <span class="o">--</span><span class="nx">version</span>
+<span class="nx">v1</span><span class="p">.</span><span class="mi">0</span>
+
+</pre>
+</div>
+
+
+<h3>Info</h3>
+
+<p>Custom information can be displayed at the top of the help printout using this method</p>
+
+<div class="highlight">
+<pre><span class="nx">argv</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span> <span class="s1">'Special script info'</span> <span class="p">);</span>
+
+<span class="nx">$</span> <span class="nx">script</span> <span class="o">--</span><span class="nx">help</span>
+
+<span class="nx">Special</span> <span class="nx">script</span> <span class="nx">info</span>
+
+<span class="p">...</span> <span class="nx">Rest</span> <span class="nx">of</span> <span class="nx">Help</span> <span class="nx">Doc</span> <span class="p">...</span>
+</pre>
+</div>
+
+
+<h3>Clear</h3>
+
+<p>If you have competing scripts accessing the argv object, you can clear out any previous options that may have been set.</p>
+
+<div class="highlight">
+<pre><span class="nx">argv</span><span class="p">.</span><span class="nx">clear</span><span class="p">().</span><span class="nx">option</span><span class="p">(</span> <span class="p">[</span><span class="k">new</span> <span class="nx">options</span><span class="p">]</span> <span class="p">);</span>
+</pre>
+</div>
+
+
+<h3>Help</h3>
+
+<p>argv injects a default help option initially and on clears. The help() method triggers the help printout.</p>
+
+<div class="highlight">
+<pre><span class="nx">argv</span><span class="p">.</span><span class="nx">help</span><span class="p">();</span>
+</pre>
+</div>
+
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+		
+  </body>
+</html>
